@@ -40,7 +40,7 @@ This repository includes the following files:
 
 * [01_camera_calibration.ipynb](https://github.com/frtunikj/sdc_advanced_lane_finding/blob/master/01_camera_calibration.ipynb) - computes camera calibration matrix and distortion coefficients of the camera lens used given a set of chessboard images taken by the same (Udacity) camera.
 * [02_color_transform_gradient_thershold.ipynb](https://github.com/frtunikj/sdc_advanced_lane_finding/blob/master/02_color_transform_gradient_thershold.ipynb) - uses color transforms, and sobel algorithm to create a thresholded binary image that has been filtered out of unnecessary information on the image.
-* [03_perspective_transformation.ipynb](https://github.com/frtunikj/sdc_advanced_lane_finding/blob/master/01_camera_calibration.ipynb) - applies perspective transform to see a “birds-eye view” of the image.
+* [03_perspective_transformation.ipynb](https://github.com/frtunikj/sdc_advanced_lane_finding/blob/master/03_perspective_transformation.ipynb) - applies perspective transform to see a “birds-eye view” of the image.
 * [04_lane_detection.ipynb](https://github.com/frtunikj/sdc_advanced_lane_finding/blob/master/04_lane_detection.ipynb) -  detects lane pixels, determines curvature of the lanes, projects detected lane boundaries back onto the undistorted image of the original view.
 * [05_lane_finding_video.ipynb](https://github.com/frtunikj/sdc_advanced_lane_finding/blob/master/05_lane_finding_video.ipynb) - outputs a video that contains the detected lanes/lane boundaries and other related information.
 
@@ -48,13 +48,13 @@ This repository includes the following files:
 
 The camera calibration code can be found under [01_camera_calibration.ipynb](https://github.com/frtunikj/sdc_advanced_lane_finding/blob/master/01_camera_calibration.ipynb) notebook (Step 2). 
 
-In order to perform camera calibration one has to determine camera matrix, which captures the transformation between real-world 3D coordinates of objects and their corresponding 2D image coordinates. Commonly used approach is to use a checkerboard as our object, since it has a simple pattern with good contrast and known dimensions. The internal corners of the checkerboard to determine the 3D world and 2D image coordinates. Using cv2.findChessboardCorners, the corners points are stored in an array imgpoints for each calibration image where the chessboard were found. 
+In order to perform camera calibration one has to determine camera matrix, which captures the transformation between real-world 3D coordinates of objects and their corresponding 2D image coordinates. Commonly used approach is to use a checkerboard as an object, since it has a simple pattern with good contrast and known dimensions. The internal corners of the checkerboard are used to determine the 3D world and 2D image coordinates. Using cv2.findChessboardCorners(), the corners points are stored in an array imgpoints for each calibration image where the chessboard were found. 
 
 ![alt text][image2]
 
 NOTE: For some of the test images, findChessboardCorners is not able to detect the desired number of internal corners (9x6) because it is not existant in the image.
 
-The object points will always be the same as the known coordinates of the chessboard with zero as 'z' coordinate because the chessboard is flat. The object points are stored in an array called objpoints. The output objpoints and imgpoints are used to compute the camera calibration and distortion coefficients using the cv2.calibrateCamera() function. 
+The object points will always be the same as the known coordinates of the chessboard with zero as Z coordinate because the chessboard is flat. The object points are stored in an array called objpoints. The output objpoints and imgpoints are used to compute the camera calibration and distortion coefficients using the cv2.calibrateCamera() function. 
 
 The distortion correction was applied to a test image using the cv2.undistort() function and the obtained results are follwing:
 
@@ -74,14 +74,8 @@ The effect of undistort is subtle, but can be perceived from the difference in s
 
 #### 2. Binary image creation (color transforms, gradients)
 
-A combination of gradient in X-direction and HLS colorspace thresholding on the S-channel was finally used to creat the binary image (see Step 6 in [02_color_transform_gradient_thershold.ipynb](https://github.com/frtunikj/sdc_advanced_lane_finding/blob/master/02_color_transform_gradient_thershold.ipynb) ). Combination of all gradients, combined with thresholding on the S-channel was also examined (See Step 6 [02_color_transform_gradient_thershold.ipynb](https://github.com/frtunikj/sdc_advanced_lane_finding/blob/master/02_color_transform_gradient_thershold.ipynb)). These two versions of combined thresholding is illustrated in the images below:
-
-![alt text][image4]
-
-![alt text][image5]
-
 The sobel operator is used to calculate the X or Y gradients (see Step 1 and 2 in see Step 6 in [02_color_transform_gradient_thershold.ipynb](https://github.com/frtunikj/sdc_advanced_lane_finding/blob/master/02_color_transform_gradient_thershold.ipynb)). Applying the sobel operator on an image is a way of
-taking the derivative/gradient of the image in the X and the Y directions. This derivative measures how fast certain value changes from one pixel location to another.The magnitude and direction gradients were derived from the x- and y-gradients. Since the lane lines are more or less vertical in the camera images, the X-gradient captures them most clearly and that is why the other gradients were not used further. This can be seen also on the figures below that show the X, Y, magnitude and direction gradient separately. 
+taking the derivative/gradient of the image in the X and the Y directions. This derivative measures how fast certain value changes from one pixel location to another.The magnitude and direction gradients were derived from the X and  Y gradients. Since the lane lines are more or less vertical in the camera images, the X-gradient captures them most clearly and that is why the other gradients were not used further. This can be seen also on the figures below that show the X, Y, magnitude and direction gradient separately. 
 
 ![alt text][image6]
 
@@ -97,11 +91,17 @@ The goal of color thresholding is to mask everything out except yellows and whit
 
 ![alt text][image10]
 
+A combination of gradient in X direction and HLS colorspace thresholding on the S-channel was finally used to creat the binary image (see Step 6 in [02_color_transform_gradient_thershold.ipynb](https://github.com/frtunikj/sdc_advanced_lane_finding/blob/master/02_color_transform_gradient_thershold.ipynb) ). Combination of all gradients, combined with thresholding on the S-channel was also examined (see Step 6 [02_color_transform_gradient_thershold.ipynb](https://github.com/frtunikj/sdc_advanced_lane_finding/blob/master/02_color_transform_gradient_thershold.ipynb)). These two versions of combined thresholding is illustrated in the images below:
+
+![alt text][image4]
+
+![alt text][image5]
+
 #### 3. Perspective transform
 
-An undistorted image of the vehicle’s perspective can be warped to output an image of another perspective such as a bird’s eye view from the sky by using a transformation matrix. A transformation matrix (perspective_M) by giving the pixel coordinates of points of the input image of one perspective (src) and the corresponding pixels coordinates of the output perspective (dst) using the function getPerspectiveTransform() (see Step 4 in [03_perspective_transformation.ipynb](https://github.com/frtunikj/sdc_advanced_lane_finding/blob/master/01_camera_calibration.ipynb)). The transformation matrix can be uses  to output an image to another perspective from a given perspective. 
+An undistorted image of the vehicle’s perspective can be warped to output an image of another perspective such as a bird’s eye view from the sky by using a transformation matrix. A transformation matrix (perspective_M) can be calculated by giving the pixel coordinates of points of the input image of one perspective (src) and the corresponding pixels coordinates of the output perspective (dst) using the function getPerspectiveTransform() (see Step 4 in [03_perspective_transformation.ipynb](https://github.com/frtunikj/sdc_advanced_lane_finding/blob/master/03_perspective_transformation.ipynb)). The transformation matrix can be used to output an image to another perspective from a given perspective. 
 
-To get the source points (src) and destination points (dst), an image in vehicle view of a road that has parallel lanes (not curved) was taken. Since the four destination points will form a rectangle as the output (lanes parallel), the source points were determined by experimenting (trial and error) and performing transformation (see Step 3 in [03_perspective_transformation.ipynb](https://github.com/frtunikj/sdc_advanced_lane_finding/blob/master/01_camera_calibration.ipynb)). This resulted in the following source and destination points:
+To get the source points (src) and destination points (dst), an image in vehicle view of a road that has parallel lanes (not curved) was taken. Since the four destination points will form a rectangle as the output (lanes parallel), the source points were determined by experimenting (trial and error) and performing transformation (see Step 3 in [03_perspective_transformation.ipynb](https://github.com/frtunikj/sdc_advanced_lane_finding/blob/master/03_perspective_transformation.ipynb)). This resulted in the following source and destination points:
 
 | Source        | Destination   | 
 |:-------------:|:-------------:| 
@@ -115,7 +115,7 @@ To verify whether the perspective transform was working as expected, the src and
 
 ![alt text][image16]
 
-In addition, the perspective transform was applied/tested to streight and curved lane lines ((see Step 5 in [03_perspective_transformation.ipynb](https://github.com/frtunikj/sdc_advanced_lane_finding/blob/master/01_camera_calibration.ipynb))):
+In addition, the perspective transform was applied/tested to streight and curved lane lines (see Step 5 in [03_perspective_transformation.ipynb](https://github.com/frtunikj/sdc_advanced_lane_finding/blob/master/03_perspective_transformation.ipynb)):
 
 ![alt text][image12]
 
@@ -128,7 +128,7 @@ In addition, the perspective transform was applied/tested to streight and curved
 
 #### 4. Identifying lane line pixels and fitting their positions with a polynomial
 
-To detect lane lines in the beginning i.e. in a first image (see detectLaneLines() in Step 2 of [04_lane_detection.ipynb](https://github.com/frtunikj/sdc_advanced_lane_finding/blob/master/04_lane_detection.ipynb)), first the X-coordinates in the image that most likely coincide with the left and the right lane lines are calcutated. Ths is done by unsing the peaks of the histogram taken along the X-axis at the bottom of the image. Next, a “sliding window algorithm” (window on top of the other) is used to search windows around for X-coordinates and retrieve the pixel positions for the lane line pixels. The pixels inside a window are marked as pixels of interest and added to the list of points in the lane (see getLaneIndices() and getLanePixelPositions() in Step 1 of [04_lane_detection.ipynb](https://github.com/frtunikj/sdc_advanced_lane_finding/blob/master/04_lane_detection.ipynb)). These steps can be repeated until the top of the lane in an image is reached. In this way all collected pixels in the next step are fed to the polyfit() function which gives out the coefficients of the 2nd degree polynomial (x = y^2 + By + C). This is done in the function detectLaneLines() in Step 2 of [04_lane_detection.ipynb](https://github.com/frtunikj/sdc_advanced_lane_finding/blob/master/04_lane_detection.ipynb). 
+To detect lane lines in the beginning i.e. in a first image (see detectLaneLines() in Step 2 of [04_lane_detection.ipynb](https://github.com/frtunikj/sdc_advanced_lane_finding/blob/master/04_lane_detection.ipynb)), first the X coordinates in the image that most likely coincide with the left and the right lane lines are calcutated. Ths is done by using the peaks of the histogram taken along the X-axis at the bottom of the image. Next, a “sliding window algorithm” (window on top of the other) is used to search windows around for X-coordinates and retrieve the pixel positions for the lane line pixels. The pixels inside a window are marked as pixels of interest and added to the list of points in the lane (see getLaneIndices() and getLanePixelPositions() in Step 1 of [04_lane_detection.ipynb](https://github.com/frtunikj/sdc_advanced_lane_finding/blob/master/04_lane_detection.ipynb)). These steps can be repeated until the top of the lane in an image is reached. In this way all collected pixels in the next step are fed to the polyfit() function which gives out the coefficients of the 2nd degree polynomial (x = y^2 + By + C). This is done in the function detectLaneLines() in Step 2 of [04_lane_detection.ipynb](https://github.com/frtunikj/sdc_advanced_lane_finding/blob/master/04_lane_detection.ipynb). 
 
 ![alt text][image18]
 
@@ -151,21 +151,21 @@ lane_mid_x = x_left + (x_right - x_left)/2
 offset = x_meter_per_pixel * (img_mid_x - lane_mid_x)
 ```
 
-As one can notice, this is done by taking the difference between the X coordinates of the midpoint of the determined lane lines and the center of the image. This assumes that the camera is mounted exactly along the center-axis of the car.
+As one can notice, this is done by taking the difference between the X coordinates of the midpoint of the determined lane lines and the center of the image. This assumes that the camera is mounted exactly along the center axis of the car.
 
 #### 6. Example image with identified lane area 
 
-The code that detects lanes and projects them on the original image can be found in Step 5 and 6 of [04_lane_detection.ipynb](https://github.com/frtunikj/sdc_advanced_lane_finding/blob/master/04_lane_detection.ipynb). A polygon is generated based on plots of the left and right fits, warped back to the perspective of the original image using the inverse perspective matrix Minv and overlaid onto the original image. The image below is an example of the results of the projectLaneLinesRoad() function:
+The code that detects lane line and projects them on the original image can be found in Step 5 and 6 of [04_lane_detection.ipynb](https://github.com/frtunikj/sdc_advanced_lane_finding/blob/master/04_lane_detection.ipynb). A polygon is generated based on plots of the left and right fits, warped back to the perspective of the original image using the inverse perspective matrix Minv and overlaid onto the original image. The image below is an example of the results of the projectLaneLinesRoad() function:
 
 ![alt text][image17]
 
-The image shown, also shows the results of the calculateAndWriteCurvatureRadius() and caculateAndWriteLaneOffset() functions (Step 4 in [04_lane_detection.ipynb](https://github.com/frtunikj/sdc_advanced_lane_finding/blob/master/04_lane_detection.ipynb)), which calculates and writes text regarding the curvature of the lane and vehicle position with respect to center.
+The image above, also shows the results of the calculateAndWriteCurvatureRadius() and caculateAndWriteLaneOffset() functions (Step 4 in [04_lane_detection.ipynb](https://github.com/frtunikj/sdc_advanced_lane_finding/blob/master/04_lane_detection.ipynb)), which calculates and writes text regarding the curvature of the lane and vehicle position with respect to center.
 
 ---
 
 ### Pipeline (video)
 
-Once the lane lines are detected at the beginning i.e. in the first image/video frame (see above Step 4), the lane lines are tracked the subsequent images/frames by specifying a search window around the polynomial fit determined previously (see trackLaneLines() in Step 2 of [05_lane_finding_video.ipynb](https://github.com/frtunikj/sdc_advanced_lane_finding/blob/master/05_lane_finding_video.ipynb)). This saves an exhaustive search from bottom to top of the image as required during the line detection described above. For tracking lines across frames, an average over some previous fits is used to place the search window. Also, for plotting the lane line on the output image an average fit is used which includes the current fit (see argument "useAverageFit"). 
+Once the lane lines are detected at the beginning i.e. in the first image/video frame (see above Step 4), the lane lines are tracked the subsequent images/frames by specifying a search window around the polynomial fit determined previously (see trackLaneLines() in Step 2 of [05_lane_finding_video.ipynb](https://github.com/frtunikj/sdc_advanced_lane_finding/blob/master/05_lane_finding_video.ipynb)). This saves an exhaustive search from bottom to top of the image as required during the line detection described above. For tracking lines across frames, an average over some previous fits is used to place the search window. Also, for plotting the lane line on the output image an average fit is used which includes the current fit (see function argument "useAverageFit"). 
 
 The resulting video can be found under [output_project_video.mp4](https://github.com/frtunikj/sdc_advanced_lane_finding/blob/master/videos/output_project_video.mp4). The complete pipeline for generating the vide via processing video images/frames can be found [05_lane_finding_video.ipynb](https://github.com/frtunikj/sdc_advanced_lane_finding/blob/master/05_lane_finding_video.ipynb). 
 
