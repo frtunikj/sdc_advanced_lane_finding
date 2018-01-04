@@ -97,7 +97,7 @@ The goal of color thresholding is to mask everything out except yellows and whit
 
 ![alt text][image20]
 
-At the end, L channel of the HLS color space was used to isolate white lines and the B channel of the LAB color space was used to isolate yellow lines (see Step 7 and 8 in [03_perspective_transformation.ipynb](https://github.com/frtunikj/sdc_advanced_lane_finding/blob/master/03_perspective_transformation.ipynb)). No gradient thresholds was used in the pipeline since the white and the yellow lines were detected quite well with the color thresholding. In addition, in order each channel to be minimally tolerant to changes in lighting a normalization of the maximum values of the HLS L channel and the LAB B channel to 255 was performed. Figures below show examples of thresholds in the HLS L channel and the LAB B channel:
+At the end, the L channel of the HLS color space was used to isolate white lines and the B channel of the LAB color space was used to isolate yellow lines (see Step 7 and 8 in [03_perspective_transformation.ipynb](https://github.com/frtunikj/sdc_advanced_lane_finding/blob/master/03_perspective_transformation.ipynb)). No gradient thresholds was used in the pipeline since the white and the yellow lines were detected quite well with the color thresholding. In addition, in order each channel to be minimally tolerant to changes in lighting a normalization of the maximum values of the HLS L channel and the LAB B channel to 255 was performed. Figures below show examples of thresholds in the HLS L channel and the LAB B channel:
 
 ![alt text][image21]
 
