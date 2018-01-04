@@ -20,7 +20,11 @@
 [image16]: ./output_images/undistored_warp.png
 [image17]: ./output_images/projected_lanes.png 
 [image18]: ./output_images/window_detect.png 
-
+[image19]: ./output_images/image_color_experiment.png 
+[image20]: ./output_images/color_experiment.png 
+[image21]: ./output_images/Lchannel.png 
+[image22]: ./output_images/Bchannel.png 
+[image23]: ./output_images/allTestFigures.png 
 
 ### Goals of the project
 The goals / steps of this project were the following:
@@ -87,15 +91,21 @@ taking the derivative/gradient of the image in the X and the Y directions. This 
 
 The sobel operator also takes a kernel parameter which changes the size of the region you apply the gradient to in an image. A low kernel size can have small noisy pixels but a high one can be prone to unwanted regions being part of the output. A kernel size of 3 was used for X, Y, magnitude gradient, and 15 for the direction gradient.
 
-The goal of color thresholding is to mask everything out except yellows and whites. The colors were represented in HSL format. The Hue value is its perceived color number representation based on combinations of red, green and blue. The Saturation value is the measure of how colorful or how dull it is, and Lightness how closer to white the color is. After experimenting with the HLS colorspace and the hint provided in the project guidelines, it was found out that the S (saturation)-channel captured the lane lines quite well. The S-channel is independent of lane line color (yellow/white) and robust against contrast changes on the road-surface, e.g. due to shadows.
+The goal of color thresholding is to mask everything out except yellows and whites. Experimnets in different color spaces were performed. The below image shows the various channels of the different color spaces for the same image (see Step 6 in [03_perspective_transformation.ipynb](https://github.com/frtunikj/sdc_advanced_lane_finding/blob/master/03_perspective_transformation.ipynb)):
 
-![alt text][image10]
+![alt text][image19]
 
-A combination of gradient in X direction and HLS colorspace thresholding on the S-channel was finally used to creat the binary image (see Step 6 in [02_color_transform_gradient_thershold.ipynb](https://github.com/frtunikj/sdc_advanced_lane_finding/blob/master/02_color_transform_gradient_thershold.ipynb) ). Combination of all gradients, combined with thresholding on the S-channel was also examined (see Step 6 [02_color_transform_gradient_thershold.ipynb](https://github.com/frtunikj/sdc_advanced_lane_finding/blob/master/02_color_transform_gradient_thershold.ipynb)). These two versions of combined thresholding is illustrated in the images below:
+![alt text][image20]
 
-![alt text][image4]
+At the end, L channel of the HLS color space was used to isolate white lines and the B channel of the LAB color space was used to isolate yellow lines (see Step 7 and 8 in [03_perspective_transformation.ipynb](https://github.com/frtunikj/sdc_advanced_lane_finding/blob/master/03_perspective_transformation.ipynb)). No gradient thresholds was used in the pipeline since the white and the yellow lines were detected quite well with the color thresholding. In addition, in order each channel to be minimally tolerant to changes in lighting a normalization of the maximum values of the HLS L channel and the LAB B channel to 255 was performed. Figures below show examples of thresholds in the HLS L channel and the LAB B channel:
 
-![alt text][image5]
+![alt text][image21]
+
+![alt text][image22]
+
+The final pipeline for processing images pipelineImageTransformation() i.e. applying color threshold can be found in Step 9 in [03_perspective_transformation.ipynb](https://github.com/frtunikj/sdc_advanced_lane_finding/blob/master/03_perspective_transformation.ipynb). The pipeline was also applied to all test images:
+
+![alt text][image23]
 
 #### 3. Perspective transform
 

@@ -129,3 +129,4 @@ def imageTransformation(image):
     combined2Image[(combinedGradient == 1) | (HLSImageSThresholded == 1)] = 1    
 
     return combined2Image
+
