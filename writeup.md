@@ -177,7 +177,7 @@ The image above, also shows the results of the calculateAndWriteCurvatureRadius(
 
 Once the lane lines are detected at the beginning i.e. in the first image/video frame (see above Step 4), the lane lines are tracked the subsequent images/frames by specifying a search window around the polynomial fit determined previously (see trackLaneLines() in Step 2 of [05_lane_finding_video.ipynb](https://github.com/frtunikj/sdc_advanced_lane_finding/blob/master/05_lane_finding_video.ipynb)). This saves an exhaustive search from bottom to top of the image as required during the line detection described above. For tracking lines across frames, an average over some previous fits is used to place the search window. Also, for plotting the lane line on the output image an average fit is used which includes the current fit (see function argument "useAverageFit"). 
 
-The resulting video can be found under [output_project_video.mp4](https://github.com/frtunikj/sdc_advanced_lane_finding/blob/master/videos/output_project_video.mp4). The complete pipeline for generating the vide via processing video images/frames can be found [05_lane_finding_video.ipynb](https://github.com/frtunikj/sdc_advanced_lane_finding/blob/master/05_lane_finding_video.ipynb). 
+The resulting video can be found under [output_project_video.mp4](https://github.com/frtunikj/sdc_advanced_lane_finding/blob/master/videos/output_project_video.mp4). The complete pipeline for generating the video via processing video images/frames can be found [05_lane_finding_video.ipynb](https://github.com/frtunikj/sdc_advanced_lane_finding/blob/master/05_lane_finding_video.ipynb). 
 
 ---
 
